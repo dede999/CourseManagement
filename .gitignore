@@ -1,0 +1,6 @@
+# IDE file
+.idea/
+
+# Compiled output
+Api/bin/
+Api/obj/
