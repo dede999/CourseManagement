@@ -4,3 +4,13 @@
 # Compiled output
 Api/bin/
 Api/obj/
+
+# Environment variables
+.env
+
+# Local configuration file (appsettings.json)
+Api/appsettings.json
+Api/appsettings.Development.json
+
+# Tools configuration file
+.config
