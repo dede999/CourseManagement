@@ -1,9 +1,14 @@
+using Api.Domain.DTOs;
+using Api.Domain.Service;
+using Api.Domain.Service.Interfaces;
 using Api.Infrastructure.DB;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Configuration.AddEnvironmentVariables();
+builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddDbContext<ApplicationContext>(option =>
 {
     option.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
@@ -24,7 +29,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.MapGet("/health_check", () =>
+app.MapGet("/api/health_check", () =>
     {
         var now = DateTime.Now;
         var dbString = builder.Configuration["DB_CONNECTION_STRING"];
@@ -39,5 +44,17 @@ app.MapGet("/health_check", () =>
     })
     .WithName("HealthCheck")
     .WithOpenApi();
+
+app.MapPost("/api/signup", async ([FromBody] SignUpDto signUp, IUserService service) =>
+{
+    var user = await service.CreateUser(signUp);
+    return Results.Created($"/api/user/{user.Email}", user);
+}).WithName("SignUp").WithOpenApi().WithTags("User");
+
+app.MapPost("/api/signin", async ([FromBody] LoginDTO login, IUserService service) =>
+{
+    var user = await service.GetUser(login.Email, login.Password);
+    return user is not null ? Results.Ok(user) : Results.Unauthorized();
+}).WithName("GetUser").WithOpenApi().WithTags("User");
 
 app.Run();
