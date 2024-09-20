@@ -47,8 +47,10 @@ app.MapGet("/api/health_check", () =>
 
 app.MapPost("/api/signup", async ([FromBody] SignUpDto signUp, IUserService service) =>
 {
-    var user = await service.CreateUser(signUp);
-    return Results.Created($"/api/user/{user.Email}", user);
+    var response = await service.CreateUser(signUp);
+    return response.IsValid
+        ? Results.Created($"/api/user/{response.Data!.Email}", response.Data.ToUserResponseDto())
+        : Results.BadRequest(response.Errors);
 }).WithName("SignUp").WithOpenApi().WithTags("User");
 
 app.MapPost("/api/signin", async ([FromBody] LoginDTO login, IUserService service) =>

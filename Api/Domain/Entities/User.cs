@@ -31,4 +31,8 @@ public class User
             Name = name
         };
     }
+    
+    public UserResponseDTO ToUserResponseDto() {
+        return new UserResponseDTO(Email, Name, Role);
+    }
 }

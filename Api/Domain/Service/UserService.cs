@@ -14,12 +14,16 @@ public class UserService: IUserService
         _context = context;
     }
     
-    public async Task<User> CreateUser(SignUpDto signUp)
+    public async Task<Response<User>> CreateUser(SignUpDto signUp)
     {
         var user = User.FromSignUp(signUp);
-        _context.Users.Add(user);
-        await _context.SaveChangesAsync();
-        return user;
+        ValidationResponse<User> validationResponse = new(user);
+        if (validationResponse.IsValid)
+        {
+            _context.Users.Add(user);
+            await _context.SaveChangesAsync();
+        }
+        return validationResponse;
     }
 
     public Task<User?> GetUser(string email, string password)
