@@ -53,10 +53,10 @@ app.MapPost("/api/signup", async ([FromBody] SignUpDto signUp, IUserService serv
         : Results.BadRequest(response.Errors);
 }).WithName("SignUp").WithOpenApi().WithTags("User");
 
-app.MapPost("/api/signin", async ([FromBody] LoginDTO login, IUserService service) =>
+app.MapPost("/api/signin", async ([FromBody] LoginDto login, IUserService service) =>
 {
-    var user = await service.GetUser(login.Email, login.Password);
-    return user is not null ? Results.Ok(user) : Results.Unauthorized();
+    var response = await service.GetUser(login.Email, login.Password);
+    return response.IsValid ? Results.Ok(response.Data!.ToUserResponseDto()) : Results.BadRequest(response.Errors);
 }).WithName("GetUser").WithOpenApi().WithTags("User");
 
 app.Run();

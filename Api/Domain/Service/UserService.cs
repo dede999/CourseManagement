@@ -2,6 +2,7 @@ using Api.Domain.DTOs;
 using Api.Domain.Entities;
 using Api.Domain.Service.Interfaces;
 using Api.Infrastructure.DB;
+using Api.Infrastructure.Request;
 
 namespace Api.Domain.Service;
 
@@ -26,10 +27,11 @@ public class UserService: IUserService
         return validationResponse;
     }
 
-    public Task<User?> GetUser(string email, string password)
+    public Task<SignInResponse> GetUser(string email, string password)
     {
-        var user = _context.Users.FirstOrDefault(
-            u => u.Email == email && u.Password == password);
-        return Task.FromResult(user);
+        var login = new LoginDto(email, password);
+        var response = new SignInResponse(login, _context);
+        
+        return Task.FromResult(response);
     }
 }
