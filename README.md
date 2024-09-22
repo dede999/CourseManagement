@@ -40,3 +40,18 @@ technology to build the back end. And this is the result.
 3. Access `https://localhost:5000/health_check` to check if the API is running
 4. I still could not create a docker file as previously described
 5. Enjoy!
+
+## To Do
+
+- Create Course entity (belongs to a teacher [User])
+  - [ ] Create entity
+  - [ ] Create service
+  - [ ] Implement actions
+- Implement JWT
+  - [ ] Create JWT service
+  - [ ] Implement JWT in the API
+  - [ ] Use JWT to secure the endpoints
+- Create Vídeo entity (belongs to a course)
+  - [ ] Create entity
+  - [ ] Create service
+  - [ ] Implement actions
