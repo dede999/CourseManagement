@@ -7,7 +7,6 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Configuration.AddEnvironmentVariables();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddDbContext<ApplicationContext>(option =>
 {
@@ -32,8 +31,6 @@ app.UseHttpsRedirection();
 app.MapGet("/api/health_check", () =>
     {
         var now = DateTime.Now;
-        var dbString = builder.Configuration["DB_CONNECTION_STRING"];
-        Console.WriteLine("Health check performed at: " + dbString);
 
         return Results.Ok(new
         {
