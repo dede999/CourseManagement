@@ -23,6 +23,8 @@ public class User
     [Required]
     public UserRoles Role { get; set; } = UserRoles.Student;
     
+    public List<Course> Courses { get; set; } = new();
+
     private static int _workFactor = 12;
 
     public static User FromSignUp(SignUpDto signUp) {
