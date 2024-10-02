@@ -9,6 +9,12 @@ public class ValidationResponse<T> : Response<T>
     public List<ValidationResult> Validations { get; set; } = new();
     public bool IsValid { get; set; }
     
+    public ValidationResponse(string errorKey, string errorMessage)
+    {
+        Errors.Add(errorKey, errorMessage);
+        IsValid = false;
+    }
+
     public ValidationResponse(T data)
     {
         Data = data;
