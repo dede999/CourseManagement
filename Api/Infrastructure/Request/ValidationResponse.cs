@@ -33,4 +33,14 @@ public class ValidationResponse<T> : Response<T>
             Errors.Add(validation.MemberNames.First(), validation.ErrorMessage);
         }
     }
+    
+    public ValidationResponse<TK> Cast<TK>(TK newData)
+    {
+        return new ValidationResponse<TK>(newData)
+        {
+            Errors = Errors,
+            IsValid = IsValid,
+            Validations = Validations
+        };
+    }
 }
