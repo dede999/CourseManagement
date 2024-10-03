@@ -28,17 +28,26 @@ public class Course
     
     public User Creator { get; set; } = null!;
     
-    public static Course FromDto(CourseDto dto, Guid? code = null) {
+    public static Course FromDto(CourseDto dto, Course? course = null) {
         (string title, string description, string endDate, string creatorEmail) = dto;
         
-        return new Course
+        if (course == null) {
+            return new Course {
+                Code = Guid.NewGuid(),
+                Title = title,
+                Description = description,
+                EndDate = DateTime.Parse(endDate, CultureInfo.InvariantCulture).ToUniversalTime(),
+                CreatorEmail = creatorEmail
+            };
+        }
+        else
         {
-            Code = code ?? Guid.NewGuid(),
-            Title = title,
-            Description = description,
-            EndDate = DateTime.ParseExact(endDate, "yyyy-MM-dd", CultureInfo.InvariantCulture).ToUniversalTime(),
-            CreatorEmail = creatorEmail
-        };
+            course.Title = title;
+            course.Description = description;
+            course.EndDate = DateTime.Parse(endDate, CultureInfo.InvariantCulture).ToUniversalTime();
+            course.CreatorEmail = creatorEmail;
+            return course;
+        }
     }
     
     public CourseResponseDto ToResponseDto() {

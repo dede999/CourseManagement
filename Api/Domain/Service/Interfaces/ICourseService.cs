@@ -9,6 +9,6 @@ public interface ICourseService
     Task<RetrieveResponse<CourseResponseDto[]>> AllCourses(int page = 1);
     Task<ValidationResponse<CourseResponseDto>> CreateCourse(CourseDto course);
     Task<RetrieveResponse<CourseResponseDto?>> GetCourse(Guid code);
-    Task<ValidationResponse<Course?>> UpdateCourse(Guid code, CourseDto course);
+    Task<ValidationResponse<CourseResponseDto?>> UpdateCourse(Guid code, CourseDto course);
     void DeleteCourse(Guid code);
 }

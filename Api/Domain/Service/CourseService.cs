@@ -24,24 +24,30 @@ public class CourseService(ApplicationContext context) : ICourseService
         return Task.FromResult(response);
     }
 
-    public Task<ValidationResponse<CourseResponseDto>> CreateCourse(CourseDto course)
+public Task<ValidationResponse<CourseResponseDto>> CreateCourse(CourseDto course)
+{
+    var courseInstance = Course.FromDto(course);
+    var validationResult = new ValidationResponse<Course>(courseInstance);
+    if (validationResult.IsValid)
     {
-        var courseInstance = Course.FromDto(course);
-        var validationResult = new ValidationResponse<Course>(courseInstance);
-        if (validationResult.IsValid)
+        try
         {
             context.Courses.Add(courseInstance);
             context.SaveChanges();
-            return Task.FromResult(
-                new ValidationResponse<CourseResponseDto>(
-                    courseInstance.ToResponseDto()));
+            context.Entry(courseInstance).Reference(c => c.Creator).Load();
+            return Task.FromResult(new ValidationResponse<CourseResponseDto>(courseInstance.ToResponseDto()));
         }
-        else
+        catch (Exception e)
         {
-            return Task.FromResult(validationResult.Cast(validationResult.Data!.ToResponseDto()));
+            return Task.FromResult(
+                new ValidationResponse<CourseResponseDto>("Database", e.Message));
         }
     }
-
+    else
+    {
+        return Task.FromResult(validationResult.Cast(courseInstance.ToResponseDto()));
+    }
+}
     public Task<RetrieveResponse<CourseResponseDto?>> GetCourse(Guid code)
     {
         
@@ -54,23 +60,34 @@ public class CourseService(ApplicationContext context) : ICourseService
             : Task.FromResult(new RetrieveResponse<CourseResponseDto?>("Course not found"));
     }
 
-    public Task<ValidationResponse<Course?>> UpdateCourse(Guid code, CourseDto course)
+    public Task<ValidationResponse<CourseResponseDto?>> UpdateCourse(Guid code, CourseDto course)
     {
         Course? courseInstance = context.Courses.FirstOrDefault(c => c.Code == code);
 
         if (courseInstance == null)
         {
-            return Task.FromResult(new ValidationResponse<Course?>("Database", "Course not found"));
+            return Task.FromResult(new ValidationResponse<CourseResponseDto?>("Database", "Course not found"));
         }
-        var courses = Course.FromDto(course, code);
+        var courses = Course.FromDto(course, courseInstance);
         var validationResult = new ValidationResponse<Course?>(courses);
         if (validationResult.IsValid)
         {
-            context.Courses.Update(courses);
-            context.SaveChanges();
+            try
+            {
+                context.Courses.Update(courses);
+                context.SaveChanges();
+                context.Entry(courseInstance).Reference(c => c.Creator).Load();
+                return Task.FromResult(new ValidationResponse<CourseResponseDto?>(courses.ToResponseDto()));
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return Task.FromResult(new ValidationResponse<CourseResponseDto?>("Database", e.Message));
+            }
+        } else
+        {
+            return Task.FromResult(validationResult.Cast(courseInstance.ToResponseDto()))!;
         }
-
-        return Task.FromResult(validationResult);
     }
 
     public void DeleteCourse(Guid code)
