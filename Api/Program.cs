@@ -110,6 +110,14 @@ app.MapGet("/api/videos/{videoCode}", async ([FromRoute] Guid code, IVideoServic
     var response = await service.GetVideo(code);
     return response.IsValid ? Results.Ok(response.Data!) : Results.BadRequest(response.Errors);
 }).WithName("Get Video").WithOpenApi().WithTags("Video");
+
+app.MapPost("/api/videos", async ([FromBody] VideoPersistenceDto video, IVideoService service) =>
+{
+    var response = await service.CreateVideo(video);
+    return response.IsValid
+        ? Results.Created($"/api/videos/{response.Data!.Code}", response.Data)
+        : Results.BadRequest(response.Errors);
+}).WithName("Create Video").WithOpenApi().WithTags("Video");
 #endregion
 
 app.Run();

@@ -22,7 +22,25 @@ public class VideoService(ApplicationContext context): IVideoService
 
     public Task<ValidationResponse<Video>> CreateVideo(VideoPersistenceDto video)
     {
-        throw new NotImplementedException();
+        var videoInstance = Video.FromDto(video);
+        var validationResult = new ValidationResponse<Video>(videoInstance);
+        if (validationResult.IsValid)
+        {
+            try
+            {
+                context.Videos.Add(videoInstance);
+                context.SaveChanges();
+                return Task.FromResult(new ValidationResponse<Video>(videoInstance));
+            }
+            catch (Exception e)
+            {
+                return Task.FromResult(new ValidationResponse<Video>("Database", e.Message));
+            }
+        }
+        else
+        {
+            return Task.FromResult(validationResult);
+        }
     }
 
     public Task<RetrieveResponse<Video?>> GetVideo(Guid code)
