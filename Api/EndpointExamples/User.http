@@ -1,0 +1,25 @@
+@Api_HostAddress = http://localhost:5000/api
+
+# @name=Health Check
+GET {{Api_HostAddress}}/health_check/
+Accept: application/json
+
+###
+
+# @name=Login
+POST {{Api_HostAddress}}/signin/
+Accept: application/json
+Content-Type: application/json
+
+{ "email": "andre_luiz@mail.com", "password": "MinhaSenha" }
+
+###
+
+# @name=Register
+POST {{Api_HostAddress}}/signup/
+Accept: application/json
+Content-Type: application/json
+
+{ "email": "andre_luiz@mail.com", "password": "MinhaSenha", "name": "André Luiz" }
+
+###

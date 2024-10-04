@@ -1,0 +1,47 @@
+@Api_HostAddressCourses = http://localhost:5000/api/courses
+
+# @name=Create a new course
+POST {{Api_HostAddressCourses}}
+Accept: application/json
+Content-Type: application/json
+
+{
+  "title": "VueJS",
+  "description": "A course about the fundamentals of VueJS",
+  "endDate": "2025-10-01",
+  "creatorEmail": "andre_luiz@mail.com"
+}
+
+###
+
+# @name=List all courses
+GET {{Api_HostAddressCourses}}
+Accept: application/json
+
+###
+
+# @name=Get a course by ID
+GET {{Api_HostAddressCourses}}/bbc98e11-bf59-4192-93e4-74683954bee2/
+Accept: application/json
+
+###
+
+# @name=Delete a course by ID
+DELETE {{Api_HostAddressCourses}}/38347f9c-9a3d-4c1f-9d94-b6dd39fde37a/
+Accept: application/json
+
+###
+
+# @name=Edit a course by ID
+PUT {{Api_HostAddressCourses}}/8081aa9d-0fca-488a-9697-9a5f2eab9662/
+Accept: application/json
+Content-Type: application/json
+
+{
+  "title": "VueJS",
+  "description": "A complete course about the fundamentals of VueJS",
+  "endDate": "2025-10-10",
+  "creatorEmail": "andre_luiz@mail.com"
+}
+
+###
