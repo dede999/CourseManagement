@@ -28,6 +28,8 @@ public class Course
     
     public User Creator { get; set; } = null!;
     
+    public ICollection<Video> Videos { get; } = new List<Video>();
+    
     public static Course FromDto(CourseDto dto, Course? course = null) {
         (string title, string description, string endDate, string creatorEmail) = dto;
         
