@@ -11,5 +11,5 @@ public interface IVideoService
     Task<ValidationResponse<Video>> CreateVideo(VideoPersistenceDto video);
     Task<RetrieveResponse<Video?>> GetVideo(Guid code);
     Task<ValidationResponse<Video?>> UpdateVideo(Guid code, VideoPersistenceDto video);
-    void DeleteVideo(Guid code);
+    bool DeleteVideo(Guid code);
 }

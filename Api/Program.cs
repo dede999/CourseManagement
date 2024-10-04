@@ -124,6 +124,12 @@ app.MapPut("/api/videos/{videoCode}", async ([FromRoute] Guid code, [FromBody] V
     var response = await service.UpdateVideo(code, video);
     return response.IsValid ? Results.Ok(response.Data) : Results.BadRequest(response.Errors);
 }).WithName("Update Video").WithOpenApi().WithTags("Video");
+
+app.MapDelete("/api/videos/{videoCode}", ([FromRoute] Guid code, IVideoService service) =>
+{
+    bool result = service.DeleteVideo(code);
+    return result ? Results.NoContent() : Results.BadRequest("Video not found");
+}).WithName("Delete Video").WithOpenApi().WithTags("Video");
 #endregion
 
 app.Run();

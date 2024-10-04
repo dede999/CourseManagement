@@ -80,9 +80,17 @@ public class VideoService(ApplicationContext context): IVideoService
         }
     }
 
-    public void DeleteVideo(Guid code)
+    public bool DeleteVideo(Guid code)
     {
-        throw new NotImplementedException();
+        var video = GetVideoByCode(code);
+        if (video != null)
+        {
+            context.Videos.Remove(video);
+            context.SaveChanges();
+            return true;
+        }
+        
+        return false;
     }
     
     private Video? GetVideoByCode(Guid code)
