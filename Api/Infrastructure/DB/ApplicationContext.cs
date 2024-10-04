@@ -7,6 +7,7 @@ public class ApplicationContext(DbContextOptions<ApplicationContext> options) : 
 {
     public DbSet<User> Users { get; set; }
     public DbSet<Course> Courses { get; set; }
+    public DbSet<Video> Videos { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -20,6 +21,16 @@ public class ApplicationContext(DbContextOptions<ApplicationContext> options) : 
 
         modelBuilder.Entity<Course>()
             .HasIndex(c => c.Title)
+            .IsUnique();
+        
+        modelBuilder.Entity<Course>()
+            .HasMany(c => c.Videos)
+            .WithOne(v => v.Course)
+            .HasForeignKey(c => c.CourseCode)
+            .OnDelete(DeleteBehavior.Cascade);
+        
+        modelBuilder.Entity<Video>()
+            .HasIndex(v => new { v.Title, v.CourseCode })
             .IsUnique();
     }
 }
