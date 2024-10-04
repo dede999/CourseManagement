@@ -39,4 +39,9 @@ public class VideoService(ApplicationContext context): IVideoService
     {
         throw new NotImplementedException();
     }
+    
+    private Video? GetVideoByCode(Guid code)
+    {
+        return context.Videos.FirstOrDefault(v => v.Code == code);
+    }
 }
