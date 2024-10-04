@@ -11,6 +11,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ICourseService, CourseService>();
+builder.Services.AddScoped<IVideoService, VideoService>();
 builder.Services.AddDbContext<ApplicationContext>(option =>
 {
     option.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
@@ -93,6 +94,16 @@ app.MapDelete("/api/courses/{code}", ([FromRoute] Guid code, ICourseService serv
     service.DeleteCourse(code);
     return Results.NoContent();
 }).WithName("Delete Course").WithOpenApi().WithTags("Course");
+#endregion
+
+#region Video
+app.MapGet("/api/courses/{code}/videos", async ([FromRoute] Guid code, IVideoService service) =>
+{
+    var response = await service.AllVideos(code);
+    return response.IsValid
+        ? Results.Ok(response.Data!)
+        : Results.BadRequest(response.Errors);
+}).WithName("All Videos").WithOpenApi().WithTags("Video");
 #endregion
 
 app.Run();

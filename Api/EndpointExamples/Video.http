@@ -1,0 +1,7 @@
+@CourseId = bbc98e11-bf59-4192-93e4-74683954bee2
+@Api_HostAddressCourses = http://localhost:5000/api/courses/{{CourseId}}/videos
+
+# @name=Lis all videos from a course
+GET {{Api_HostAddressCourses}}
+Accept: application/json
+Content-Type: application/json
