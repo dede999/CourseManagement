@@ -17,5 +17,9 @@ public class ApplicationContext(DbContextOptions<ApplicationContext> options) : 
             .HasMany(u => u.Courses)
             .WithOne(c => c.Creator)
             .HasForeignKey(c => c.CreatorEmail);
+
+        modelBuilder.Entity<Course>()
+            .HasIndex(c => c.Title)
+            .IsUnique();
     }
 }
