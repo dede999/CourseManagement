@@ -54,7 +54,30 @@ public class VideoService(ApplicationContext context): IVideoService
 
     public Task<ValidationResponse<Video?>> UpdateVideo(Guid code, VideoPersistenceDto video)
     {
-        throw new NotImplementedException();
+        var videoInstance = GetVideoByCode(code);
+        if (videoInstance == null)
+        {
+            return Task.FromResult(new ValidationResponse<Video?>("Database", "Video not found"));
+        }
+
+        var validationResult = new ValidationResponse<Video>(videoInstance.Update(video));
+        if (validationResult.IsValid)
+        {
+            try
+            {
+                context.Videos.Update(videoInstance);
+                context.SaveChanges();
+                return Task.FromResult(new ValidationResponse<Video?>(videoInstance));
+            }
+            catch (Exception e)
+            {
+                return Task.FromResult(new ValidationResponse<Video?>("Database", e.Message));
+            }
+        }
+        else
+        {
+            return Task.FromResult(validationResult.Cast<Video?>(videoInstance));
+        }
     }
 
     public void DeleteVideo(Guid code)
