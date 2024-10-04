@@ -104,6 +104,12 @@ app.MapGet("/api/courses/{code}/videos", async ([FromRoute] Guid code, IVideoSer
         ? Results.Ok(response.Data!)
         : Results.BadRequest(response.Errors);
 }).WithName("All Videos").WithOpenApi().WithTags("Video");
+
+app.MapGet("/api/videos/{videoCode}", async ([FromRoute] Guid code, IVideoService service) =>
+{
+    var response = await service.GetVideo(code);
+    return response.IsValid ? Results.Ok(response.Data!) : Results.BadRequest(response.Errors);
+}).WithName("Get Video").WithOpenApi().WithTags("Video");
 #endregion
 
 app.Run();

@@ -27,7 +27,11 @@ public class VideoService(ApplicationContext context): IVideoService
 
     public Task<RetrieveResponse<Video?>> GetVideo(Guid code)
     {
-        throw new NotImplementedException();
+        var video = GetVideoByCode(code);
+        
+        return video != null
+            ? Task.FromResult(new RetrieveResponse<Video?>(video))
+            : Task.FromResult(new RetrieveResponse<Video?>("Video not found"));
     }
 
     public Task<ValidationResponse<Video?>> UpdateVideo(Guid code, VideoPersistenceDto video)
