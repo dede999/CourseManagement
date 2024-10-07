@@ -2,12 +2,13 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using Api.Domain.DTOs;
 using Api.Domain.Enums;
+using Api.Infrastructure.DB;
 using BCrypt.Net;
 using static BCrypt.Net.BCrypt;
 
 namespace Api.Domain.Entities;
 
-public class User
+public class User: GenericEntity
 {
     [Required]
     [EmailAddress]

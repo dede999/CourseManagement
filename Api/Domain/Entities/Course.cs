@@ -1,10 +1,11 @@
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using Api.Domain.DTOs.Course;
+using Api.Infrastructure.DB;
 
 namespace Api.Domain.Entities;
 
-public class Course
+public class Course: GenericEntity
 {
     [Key]
     [Required]

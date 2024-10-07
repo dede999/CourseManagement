@@ -1,9 +1,10 @@
 using System.ComponentModel.DataAnnotations;
 using Api.Domain.DTOs;
+using Api.Infrastructure.DB;
 
 namespace Api.Domain.Entities;
 
-public class Video
+public class Video : GenericEntity
 {
     [Key]
     [Required]
