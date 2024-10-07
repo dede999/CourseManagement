@@ -10,5 +10,5 @@ public interface ICourseService
     Task<ValidationResponse<CourseResponseDto>> CreateCourse(CourseDto course);
     Task<RetrieveResponse<CourseResponseDto?>> GetCourse(Guid code);
     Task<ValidationResponse<CourseResponseDto?>> UpdateCourse(Guid code, CourseDto course);
-    void DeleteCourse(Guid code);
+    bool DeleteCourse(Guid code);
 }

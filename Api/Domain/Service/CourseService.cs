@@ -1,13 +1,14 @@
 using Api.Domain.DTOs.Course;
 using Api.Domain.Entities;
 using Api.Domain.Service.Interfaces;
+using Api.Infrastructure;
 using Api.Infrastructure.DB;
 using Api.Infrastructure.Request;
 using Microsoft.EntityFrameworkCore;
 
 namespace Api.Domain.Service;
 
-public class CourseService(ApplicationContext context) : ICourseService
+public class CourseService(ApplicationContext context) : GenericService(context), ICourseService
 {
     private static int PerPageInstances => 10;
 
@@ -62,7 +63,7 @@ public Task<ValidationResponse<CourseResponseDto>> CreateCourse(CourseDto course
 
     public Task<ValidationResponse<CourseResponseDto?>> UpdateCourse(Guid code, CourseDto course)
     {
-        Course? courseInstance = context.Courses.FirstOrDefault(c => c.Code == code);
+        Course? courseInstance = GetInstanceByCode(code, context.Courses);
 
         if (courseInstance == null)
         {
@@ -90,10 +91,9 @@ public Task<ValidationResponse<CourseResponseDto>> CreateCourse(CourseDto course
         }
     }
 
-    public void DeleteCourse(Guid code)
+    public bool DeleteCourse(Guid code)
     {
-        var course = context.Courses.First(c => c.Code == code);
-        context.Courses.Remove(course);
-        context.SaveChanges();
+        var course = GetInstanceByCode(code, context.Courses);
+        return DeleteInstanceByCode(course, context.Courses);
     }
 }

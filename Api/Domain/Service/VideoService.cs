@@ -2,12 +2,13 @@ using Api.Domain.DTOs;
 using Api.Domain.DTOs.Video;
 using Api.Domain.Entities;
 using Api.Domain.Service.Interfaces;
+using Api.Infrastructure;
 using Api.Infrastructure.DB;
 using Api.Infrastructure.Request;
 
 namespace Api.Domain.Service;
 
-public class VideoService(ApplicationContext context): IVideoService
+public class VideoService(ApplicationContext context): GenericService(context), IVideoService
 {
     public Task<RetrieveResponse<VideoBlockDto[]>> AllVideos(Guid courseCode)
     {
@@ -45,7 +46,7 @@ public class VideoService(ApplicationContext context): IVideoService
 
     public Task<RetrieveResponse<Video?>> GetVideo(Guid code)
     {
-        var video = GetVideoByCode(code);
+        var video = GetInstanceByCode(code, context.Videos);
         
         return video != null
             ? Task.FromResult(new RetrieveResponse<Video?>(video))
@@ -54,7 +55,7 @@ public class VideoService(ApplicationContext context): IVideoService
 
     public Task<ValidationResponse<Video?>> UpdateVideo(Guid code, VideoPersistenceDto video)
     {
-        var videoInstance = GetVideoByCode(code);
+        var videoInstance = GetInstanceByCode(code, context.Videos);
         if (videoInstance == null)
         {
             return Task.FromResult(new ValidationResponse<Video?>("Database", "Video not found"));
@@ -82,19 +83,7 @@ public class VideoService(ApplicationContext context): IVideoService
 
     public bool DeleteVideo(Guid code)
     {
-        var video = GetVideoByCode(code);
-        if (video != null)
-        {
-            context.Videos.Remove(video);
-            context.SaveChanges();
-            return true;
-        }
-        
-        return false;
-    }
-    
-    private Video? GetVideoByCode(Guid code)
-    {
-        return context.Videos.FirstOrDefault(v => v.Code == code);
+        var video = GetInstanceByCode(code, context.Videos);
+        return DeleteInstanceByCode(video, context.Videos);
     }
 }
