@@ -105,7 +105,7 @@ app.MapGet("/api/courses/{code}/videos", async ([FromRoute] Guid code, IVideoSer
         : Results.BadRequest(response.Errors);
 }).WithName("All Videos").WithOpenApi().WithTags("Video");
 
-app.MapGet("/api/videos/{videoCode}", async ([FromRoute] Guid code, IVideoService service) =>
+app.MapGet("/api/videos/{code}", async ([FromRoute] Guid code, IVideoService service) =>
 {
     var response = await service.GetVideo(code);
     return response.IsValid ? Results.Ok(response.Data!) : Results.BadRequest(response.Errors);
@@ -119,13 +119,13 @@ app.MapPost("/api/videos", async ([FromBody] VideoPersistenceDto video, IVideoSe
         : Results.BadRequest(response.Errors);
 }).WithName("Create Video").WithOpenApi().WithTags("Video");
 
-app.MapPut("/api/videos/{videoCode}", async ([FromRoute] Guid code, [FromBody] VideoPersistenceDto video, IVideoService service) =>
+app.MapPut("/api/videos/{code}", async ([FromRoute] Guid code, [FromBody] VideoPersistenceDto video, IVideoService service) =>
 {
     var response = await service.UpdateVideo(code, video);
     return response.IsValid ? Results.Ok(response.Data) : Results.BadRequest(response.Errors);
 }).WithName("Update Video").WithOpenApi().WithTags("Video");
 
-app.MapDelete("/api/videos/{videoCode}", ([FromRoute] Guid code, IVideoService service) =>
+app.MapDelete("/api/videos/{code}", ([FromRoute] Guid code, IVideoService service) =>
 {
     bool result = service.DeleteVideo(code);
     return result ? Results.NoContent() : Results.BadRequest("Video not found");
