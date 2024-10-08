@@ -1,7 +1,54 @@
 @CourseId = bbc98e11-bf59-4192-93e4-74683954bee2
 @Api_HostAddressCourses = http://localhost:5000/api/courses/{{CourseId}}/videos
+@Api_HostAddressVideos = http://localhost:5000/api/videos/
 
-# @name=Lis all videos from a course
+# @name=List all videos from a course
 GET {{Api_HostAddressCourses}}
 Accept: application/json
 Content-Type: application/json
+
+###
+
+# @name=Add another vídeo
+POST {{Api_HostAddressVideos}}
+Accept: application/json
+Content-Type: application/json
+
+{
+  "title": "Learning NextJS",
+  "videoUrl": "https://www.youtube.com/watch?v=9bZkp7q19f0",
+  "courseCode": "{{CourseId}}",
+  "description": "What is NextJS? What is the difference between it and React?",
+  "duration": 304,
+  "blockNumber": 3,
+  "blockTitle": "Typescript"
+}
+
+###
+
+# @name=Get vídeo details
+GET {{Api_HostAddressVideos}}/e3e0d436-7e82-4ff4-ba99-324edf17d9cc
+Accept: application/json
+Content-Type: application/json
+
+###
+
+# @name=Edit a vídeo
+PUT {{Api_HostAddressVideos}}/e3e0d436-7e82-4ff4-ba99-324edf17d9cc
+Accept: application/json
+Content-Type: application/json
+
+{
+  "title": "Learning NextJS",
+  "videoUrl": "https://www.youtube.com/watch?v=9bZkp7q19f0",
+  "courseCode": "{{CourseId}}",
+  "description": "What is NextJS? What is the difference between it and React?",
+  "duration": 304,
+  "blockNumber": 4,
+  "blockTitle": "NextJS"
+}
+
+###
+
+# @name=Remove a vídeo
+DELETE {{Api_HostAddressVideos}}/45dfb572-e298-4536-aa6a-6ed5deec2730
